@@ -194,8 +194,16 @@ Custom address:  hello@yourdomain.com
 Action:          Send to → you@gmail.com
 ```
 
-> 💡 Add as many as you want: `info@`, `support@`, `hi@` — all can forward to the same inbox.
-> You can also enable a **catch-all** to capture anything@yourdomain.com.
+Repeat for as many as you need:
+
+```
+hello@yourdomain.com   → you@gmail.com
+info@yourdomain.com    → you@gmail.com
+support@yourdomain.com → you@gmail.com
+```
+
+> 💡 **Catch-all:** Email Routing → Routing rules → Catch-all address → Edit → Send to → you@gmail.com → Enable ✅  
+> Any address on your domain that doesn't match a rule (including typos) will still land in your inbox.
 
 ### 2.3 Enable Email Routing
 
