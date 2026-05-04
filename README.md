@@ -1,41 +1,6 @@
 <div align="center">
 
-<!-- Banner SVG -->
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="180" viewBox="0 0 900 180">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0f1117;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#1a1f2e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0f1117;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#f6821f" />
-      <stop offset="100%" style="stop-color:#faad3f" />
-    </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <rect width="900" height="180" fill="url(#bg)" rx="12"/>
-  <line x1="0" y1="4" x2="900" y2="4" stroke="#f6821f" stroke-width="1" opacity="0.3"/>
-  <line x1="0" y1="176" x2="900" y2="176" stroke="#f6821f" stroke-width="1" opacity="0.3"/>
-  <g transform="translate(55, 62)" filter="url(#glow)">
-    <ellipse cx="40" cy="45" rx="38" ry="20" fill="url(#accent)" opacity="0.9"/>
-    <circle cx="22" cy="38" r="16" fill="url(#accent)" opacity="0.9"/>
-    <circle cx="42" cy="28" r="22" fill="url(#accent)" opacity="0.9"/>
-    <circle cx="62" cy="36" r="16" fill="url(#accent)" opacity="0.9"/>
-  </g>
-  <g transform="translate(820, 68)">
-    <rect x="0" y="0" width="50" height="36" rx="4" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.8"/>
-    <polyline points="0,0 25,20 50,0" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.8"/>
-  </g>
-  <text x="450" y="72" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="800" fill="white" text-anchor="middle" letter-spacing="1">Free Custom Domain Email</text>
-  <text x="450" y="108" font-family="'Segoe UI', sans-serif" font-size="15" fill="url(#accent)" text-anchor="middle" letter-spacing="3" font-weight="600">CLOUDFLARE EMAIL ROUTING · SMTP2GO</text>
-  <text x="450" y="148" font-family="'Segoe UI', sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">Send &amp; receive from yourname@yourdomain.com — no paid hosting, no catch</text>
-</svg>
-
-<br/>
+![banner](https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/banner.png)
 
 ![Free](https://img.shields.io/badge/Cost-100%25%20Free-22c55e?style=for-the-badge&logo=checkmarx&logoColor=white)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-Email_Routing-F6821F?style=for-the-badge&logo=cloudflare&logoColor=white)
