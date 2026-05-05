@@ -401,11 +401,7 @@ Make sure **Step 2 is fully complete** before starting Step 4 — routing must b
 
 <div align="center">
 
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="60" viewBox="0 0 700 60">
-  <rect width="700" height="60" fill="#0f1117" rx="8"/>
-  <text x="350" y="28" font-family="'Segoe UI', sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">☁️ Cloudflare Email Routing  ·  🔵 SMTP2GO  ·  💸 $0/month</text>
-  <text x="350" y="48" font-family="'Segoe UI', sans-serif" font-size="11" fill="#475569" text-anchor="middle">No hosting required. No credit card. Works with any domain registrar.</text>
-</svg>
+[![footer](https://capsule-render.vercel.app/api?type=waving&color=F6821F&height=140&section=footer&text=Built%20on%20an%20idea%20by%20%40iamavu%20%E2%86%97&fontSize=16&fontColor=fed7aa&fontAlignY=55&desc=Cloudflare%20%C2%B7%20SMTP2GO%20%C2%B7%20%240%2Fmonth%20%7C%20No%20hosting%2C%20no%20credit%20card%2C%20any%20registrar&descAlignY=72&descSize=12&descColor=94a3b8&animation=fadeIn)](https://iamavu.com)
 
 **⭐ Star this repo if it saved you from paying for email hosting!**
 
