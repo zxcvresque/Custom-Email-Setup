@@ -1,10 +1,12 @@
 ## What’s the benefit?
 
-Give people an email address on your own domain, such as `hello@yourdomain.com`. They can write to that address and see it in the From field when you reply. You can also create addresses like `support@yourdomain.com` and send them to the same inbox.
-
-Incoming mail is forwarded to the inbox you already check. For outgoing mail, you choose your custom address when composing a message and send it through an SMTP relay. If you change relays later, you can keep the same public address.
-
-If you already own the domain and stay within the free plans’ sending limits, you can do this without a separate email hosting subscription. Domain registration and renewal are still separate costs.
+- **Own your business email.** Use an address that carries your business name, like `hello@yourbusiness.com`.
+- **Create multiple addresses for free.** Use `hello@` for introductions, `info@` for questions, and `support@` for customer help.
+- **Keep everything in one inbox.** Messages from all those addresses can go to the inbox you already check.
+- **Reply from your business address.** Customers see your business email when you write back.
+- **Keep your personal address private.** Put your business email on your website, invoices, and social profiles.
+- **Keep the same address as you grow.** Your email address belongs to your domain, so you can take it with you if you change email providers.
+- **Pay $0 for email on the free plans.** If you already own your domain, there’s no extra monthly email bill within the free limits. Your usual domain renewal still applies.
 
 ## How it works
 
