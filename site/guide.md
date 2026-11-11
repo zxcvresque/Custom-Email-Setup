@@ -94,15 +94,21 @@ The SMTP password comes from the relay. For browser setup, see <img src="assets/
 
 ## Add DMARC
 
-DMARC lets you monitor mail that claims to come from your domain and publish a policy for messages that fail alignment. If you already have a DMARC record, update it in place.
+**Optional for basic forwarding and low-volume sending, but recommended.** DMARC helps protect your address against spoofing. It checks that at least one passing SPF or DKIM check matches the domain in the visible From address, then tells receiving mail servers how to handle messages that fail. Bulk senders must publish DMARC for services such as [Gmail](https://support.google.com/mail/answer/81126) and [Yahoo](https://senders.yahooinc.com/best-practices/).
+
+1. In the <img src="assets/cloudflare.png" alt="" height="14"> **Cloudflare** dashboard, choose your domain and open **DNS → Records**. Search for `_dmarc` first. If you already have a record, review and edit it in place only if needed. Keep your existing enforcement policy unless you intend to change it.
+2. If there is no record, choose **Add record** and enter these values. Leave **TTL** on **Auto** and save.
 
 | DNS field | Example |
 | --- | --- |
 | Type | `TXT` |
 | Name | `_dmarc` |
-| Value | `v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com` |
+| Value | `v=DMARC1; p=none` |
 
-Set up the reporting address first. Start at `p=none`, review the reports for all legitimate senders, then move to `p=quarantine` or `p=reject` when you're ready. See <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare's DMARC guide](https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/).
+3. **Optional reports.** If you want aggregate reports, first create a working address such as `dmarc@yourdomain.com`. Then append `; rua=mailto:dmarc@yourdomain.com` to the same TXT record, using your own domain.
+4. Send a test message from your custom address to another inbox. Open the received message's full headers and check for `dmarc=pass`.
+
+`p=none` asks receivers to apply no additional action for DMARC failures. After you verify that all legitimate senders pass, you can tighten the policy to `p=quarantine` or `p=reject`. See <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare's DMARC guide](https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/).
 
 ## Test both directions
 
