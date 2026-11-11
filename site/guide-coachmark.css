@@ -1,0 +1,73 @@
+.guide-controls.guide-coachmark-highlight button[data-guide-toggle] {
+  box-shadow: 0 0 0 3px color-mix(in srgb, #fff 20%, transparent), 0 0 18px color-mix(in srgb, #fff 20%, transparent);
+}
+
+.guide-coachmark {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 10px);
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(280px, calc(100vw - 40px));
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 14px 40px rgb(0 0 0 / .24);
+  font-size: .82rem;
+  line-height: 1.45;
+  animation: guide-coachmark-in 220ms var(--ease) both;
+}
+
+.guide-coachmark::before {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  background: var(--paper);
+  content: '';
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.guide-coachmark p { margin: 0; flex: 1; }
+.guide-coachmark-dismiss {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 620;
+  cursor: pointer;
+}
+.guide-coachmark-dismiss:hover { background: var(--panel); }
+.guide-coachmark-dismiss:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@keyframes guide-coachmark-in {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1279px) {
+  .guide-coachmark {
+    position: relative;
+    top: auto;
+    right: auto;
+    flex: 0 0 100%;
+    width: auto;
+    margin-top: 2px;
+  }
+  .guide-coachmark::before { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-coachmark { animation: none; }
+}

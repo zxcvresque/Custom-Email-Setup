@@ -6,6 +6,55 @@ const state = { recommended: false, plain: false };
 let generation = 0;
 const cleanups = new Set();
 const electricTimers = new WeakMap();
+const variantAnchorSelector = 'p, li, h3, .table-wrap, pre, details';
+const visibleAnchorSelector = '.chapter-head, .guide-copy:not([hidden]) p, .guide-copy:not([hidden]) li, .guide-copy:not([hidden]) h3, .guide-copy:not([hidden]) .table-wrap, .guide-copy:not([hidden]) pre, .guide-copy:not([hidden]) details';
+
+function captureScrollAnchor() {
+  const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom ?? 0;
+  const targetY = headerBottom + 12;
+  const visible = Array.from(document.querySelectorAll(visibleAnchorSelector), (element) => ({
+    element,
+    rect: element.getBoundingClientRect(),
+  })).filter(({ rect }) => rect.height > 0 && rect.bottom > targetY && rect.top < innerHeight);
+  if (!visible.length) return null;
+  visible.sort((a, b) => Math.abs(a.rect.top - targetY) - Math.abs(b.rect.top - targetY));
+  const { element, rect } = visible[0];
+  const section = element.closest('.chapter');
+  if (!section) return null;
+  if (element.classList.contains('chapter-head')) return { section, heading: true, top: rect.top };
+  const copy = element.closest('.guide-copy');
+  if (!copy) return { section, heading: true, top: section.querySelector('.chapter-head').getBoundingClientRect().top };
+  const index = Array.from(copy.querySelectorAll(variantAnchorSelector)).indexOf(element);
+  return { section, index, top: rect.top };
+}
+
+function restoreScrollAnchor(anchor) {
+  if (!anchor) return;
+  requestAnimationFrame(() => {
+    const element = anchor.heading
+      ? anchor.section.querySelector('.chapter-head')
+      : anchor.section.querySelector('.guide-copy:not([hidden])')?.querySelectorAll(variantAnchorSelector)[anchor.index];
+    if (!element) return;
+    const delta = element.getBoundingClientRect().top - anchor.top;
+    if (Math.abs(delta) < 1) return;
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
+    root.style.scrollBehavior = previousBehavior;
+  });
+}
+
+function animateElectricNoise() {
+  if (reduce.matches) return;
+  const turbulence = document.getElementById('guide-electric-noise-animation');
+  if (!turbulence?.beginElement) return;
+  try {
+    turbulence.beginElement();
+  } catch {
+    // The conic sweep remains as a fallback if SVG animation is unavailable.
+  }
+}
 
 function pulseElectric(button) {
   controls.classList.remove('first-visit');
@@ -14,6 +63,7 @@ function pulseElectric(button) {
   // Restart the one-shot border sweep when the same control is toggled again.
   void button.offsetWidth;
   button.classList.add('electric');
+  animateElectricNoise();
   electricTimers.set(button, setTimeout(() => button.classList.remove('electric'), reduce.matches ? 700 : 950));
 }
 
@@ -69,7 +119,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { rootMargin: '0px' });
 for (const section of chapters) observer.observe(section);
 
-function updateView() {
+function updateView(anchor) {
   generation++;
   stopAnimations();
   const variant = state.recommended ? (state.plain ? 'recommended-plain' : 'recommended') : (state.plain ? 'plain' : 'full');
@@ -83,22 +133,17 @@ function updateView() {
     if (rect.bottom > 0 && rect.top < innerHeight) reveal(section, generation);
   }
   for (const button of buttons) button.setAttribute('aria-pressed', String(state[button.dataset.guideToggle]));
+  restoreScrollAnchor(anchor);
 }
 
 controls.hidden = false;
-try {
-  const seenKey = 'custom-email-guide-options-seen-v1';
-  if (!localStorage.getItem(seenKey)) {
-    controls.classList.add('first-visit');
-    localStorage.setItem(seenKey, '1');
-    setTimeout(() => controls.classList.remove('first-visit'), reduce.matches ? 1500 : 2700);
-  }
-} catch {
-  // Keep the controls usable when storage is blocked; the first-visit cue is optional.
-}
+controls.classList.add('first-visit');
+animateElectricNoise();
+setTimeout(() => controls.classList.remove('first-visit'), reduce.matches ? 1500 : 2700);
 for (const button of buttons) button.addEventListener('click', () => {
+  const anchor = captureScrollAnchor();
   state[button.dataset.guideToggle] = !state[button.dataset.guideToggle];
-  updateView();
+  updateView(anchor);
   pulseElectric(button);
 });
 reduce.addEventListener('change', () => { if (reduce.matches) stopAnimations(); });

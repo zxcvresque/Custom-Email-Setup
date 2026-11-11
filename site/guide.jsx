@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { LiquidMetal, liquidMetalPresets } from '@paper-design/shaders-react';
 import './checklist.js';
 import './guide-options.js';
+import './guide-coachmark.js';
+import './guide-prompts.js';
 
 const root = document.documentElement;
 const systemDark = matchMedia('(prefers-color-scheme: dark)');

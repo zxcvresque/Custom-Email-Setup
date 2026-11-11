@@ -1,0 +1,117 @@
+.guide-action-toast {
+  position: fixed;
+  isolation: isolate;
+  z-index: 1100;
+  left: max(20px, calc((100vw - 1320px) / 2));
+  bottom: 24px;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 13px;
+  width: min(440px, calc(100vw - 40px));
+  padding: 17px 18px 16px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / .18);
+  border-radius: 20px;
+  background: #080808;
+  color: #fff;
+  box-shadow: 0 18px 56px rgb(0 0 0 / .28);
+  line-height: 1.45;
+  translate: 0 0;
+  transition: translate 400ms cubic-bezier(.2,.8,.2,1), border-color 700ms ease;
+}
+.guide-action-toast::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: 18px;
+  bottom: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 2400ms cubic-bezier(.16,1,.3,1);
+  pointer-events: none;
+}
+.guide-action-toast > * { position: relative; z-index: 1; }
+.guide-action-toast:is(:hover, :focus-within) {
+  translate: 0 -4px;
+  border-color: rgb(0 0 0 / .14);
+}
+.guide-action-toast:is(:hover, :focus-within)::before { transform: scale(40); }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-title,
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-mark { color: #080808; }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-detail { color: #18181b; }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-mark {
+  border-color: rgb(0 0 0 / .15);
+  background: rgb(0 0 0 / .06);
+}
+.guide-action-toast[hidden] { display: none; }
+.guide-action-toast.is-visible { animation: guide-toast-enter 260ms cubic-bezier(.2,.8,.2,1) both; }
+.guide-action-toast.is-closing { animation: guide-toast-exit 180ms ease both; }
+.guide-toast-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 1px;
+  border: 1px solid rgb(255 255 255 / .2);
+  border-radius: 10px;
+  background: rgb(255 255 255 / .08);
+  color: #fff;
+  transition: color 700ms ease, background-color 700ms ease, border-color 700ms ease;
+}
+.guide-toast-mark svg { width: 18px; height: 18px; }
+.guide-toast-content { min-width: 0; }
+.guide-toast-title { display: block; font-size: .98rem; font-weight: 680; line-height: 1.3; letter-spacing: -.02em; }
+.guide-toast-detail { margin: 7px 0 14px; color: #a1a1aa; font-size: .84rem; line-height: 1.5; transition: color 700ms ease; }
+.guide-toast-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.guide-toast-action {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid rgb(255 255 255 / .24);
+  border-radius: 9px;
+  background: rgb(255 255 255 / .06);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 700ms ease, border-color 700ms ease, color 700ms ease, transform 160ms ease;
+}
+.guide-toast-action:hover { background: rgb(255 255 255 / .14); }
+.guide-toast-action:active { transform: scale(.97); }
+.guide-toast-action:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.guide-toast-action-primary { background: #fff; border-color: #fff; color: #080808; }
+.guide-toast-action-primary:hover { background: #ececec; border-color: #ececec; }
+.guide-toast-action-quiet { margin-inline-start: auto; border-color: transparent; color: #a1a1aa; background: transparent; }
+.guide-toast-action-quiet:hover { border-color: rgb(255 255 255 / .24); color: #fff; }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action {
+  border-color: rgb(0 0 0 / .2);
+  background: rgb(0 0 0 / .04);
+  color: #080808;
+}
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action:hover { background: rgb(0 0 0 / .1); }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action-primary {
+  border-color: #080808;
+  background: #080808;
+  color: #fff;
+}
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action-primary:hover { background: #252525; border-color: #252525; }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action-quiet { color: #18181b; }
+.guide-action-toast:is(:hover, :focus-within) .guide-toast-action-quiet:hover { color: #080808; }
+@keyframes guide-toast-enter {
+  from { opacity: 0; transform: translateY(12px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes guide-toast-exit {
+  to { opacity: 0; transform: translateY(7px) scale(.99); }
+}
+@media (max-width: 767px) {
+  .guide-action-toast { left: 14px; right: 14px; bottom: max(14px, env(safe-area-inset-bottom)); width: auto; padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-action-toast.is-visible, .guide-action-toast.is-closing { animation: none; }
+  .guide-action-toast, .guide-action-toast::before, .guide-toast-mark, .guide-toast-detail, .guide-toast-action { transition: none; }
+  .guide-action-toast:is(:hover, :focus-within)::before { transform: scale(40); }
+}

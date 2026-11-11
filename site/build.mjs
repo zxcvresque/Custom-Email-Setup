@@ -128,9 +128,21 @@ const html = `<!doctype html>
   <script>try { const theme = localStorage.getItem('email-guide-theme'); if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch {}</script>
   <link rel="stylesheet" href="./guide.css">
   <link rel="stylesheet" href="./checklist.css">
+  <link rel="stylesheet" href="./guide-coachmark.css">
+  <link rel="stylesheet" href="./guide-prompts.css">
   <script defer src="./guide.js"></script>
 </head>
 <body id="top">
+<svg class="filter-defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <filter id="guide-electric-displacement" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency=".035 .08" numOctaves="2" seed="7" result="electric-noise">
+        <animate id="guide-electric-noise-animation" attributeName="baseFrequency" values=".025 .06;.065 .11;.03 .07;.055 .09;.025 .06" dur="850ms" begin="indefinite" fill="freeze"></animate>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="electric-noise" scale="7" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+    </filter>
+  </defs>
+</svg>
 <a class="skip" href="#guide">Skip to guide</a>
 <header class="topbar">
   <div class="shell topbar-inner">
@@ -170,19 +182,19 @@ const html = `<!doctype html>
     </aside>
     <article aria-label="Custom email setup guide">
       <div class="guide-controls" role="group" aria-label="Guide options" hidden>
-        <button type="button" data-guide-toggle="recommended" aria-pressed="false" aria-describedby="recommended-tip">
+        <button type="button" data-guide-toggle="recommended" aria-pressed="false" aria-describedby="recommended-tip" title="Highlights the Cloudflare + Gmail + SMTP2GO route.">
           <span>Recommended setup only</span>
           <span class="provider-route" aria-label="Cloudflare, Gmail, and SMTP2GO">
             <span><img src="assets/cloudflare.png" alt="" height="14"> Cloudflare</span><span aria-hidden="true">+</span>
             <span><img src="assets/gmail.png" alt="" height="14"> Gmail</span><span aria-hidden="true">+</span>
             <span><img src="assets/smtp2go.png" alt="" height="14"> SMTP2GO</span>
           </span>
-          <span class="guide-control-tip" id="recommended-tip" role="tooltip">Highlights the Cloudflare + Gmail + SMTP2GO route in the guide. Comparison tables, providers, and icons stay visible.</span>
         </button>
-        <button type="button" data-guide-toggle="plain" aria-pressed="false" aria-describedby="plain-tip">
+        <button type="button" data-guide-toggle="plain" aria-pressed="false" aria-describedby="plain-tip" title="Uses shorter wording while keeping the same tables, icons, and setup steps.">
           <span>Simple language</span>
-          <span class="guide-control-tip" id="plain-tip" role="tooltip">Shortens the explanations while keeping the same tables, icons, steps, and page layout.</span>
         </button>
+        <span class="guide-control-tip" id="recommended-tip" role="tooltip">Cloudflare forwards mail, Gmail is your inbox, and SMTP2GO sends replies. The comparison tables stay visible.</span>
+        <span class="guide-control-tip" id="plain-tip" role="tooltip">Uses shorter wording while keeping the same tables, icons, and setup steps.</span>
       </div>
       ${sections}</article>
   </div>
@@ -201,6 +213,8 @@ await Promise.all([
   copyFile('node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2', 'dist/assets/geist.woff2'),
   copyFile('site/guide.css', 'dist/guide.css'),
   copyFile('site/checklist.css', 'dist/checklist.css'),
+  copyFile('site/guide-coachmark.css', 'dist/guide-coachmark.css'),
+  copyFile('site/guide-prompts.css', 'dist/guide-prompts.css'),
   writeFile('dist/index.html', html),
   build({ entryPoints: ['site/guide.jsx'], outfile: 'dist/guide.js', bundle: true,
     format: 'iife', minify: true, jsx: 'automatic', define: { 'process.env.NODE_ENV': '"production"' } }),
