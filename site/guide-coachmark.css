@@ -71,6 +71,34 @@
   .guide-coachmark::before { display: none; }
 }
 
+@media (max-width: 767px) {
+  .guide-coachmark {
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: .72rem;
+    line-height: 1.28;
+  }
+  .guide-coachmark-dismiss {
+    min-height: 32px;
+    padding: 4px 8px;
+    font-size: .74rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .guide-coachmark {
+    gap: 6px;
+    padding: 7px 8px;
+    font-size: .68rem;
+    line-height: 1.24;
+  }
+  .guide-coachmark-dismiss {
+    min-height: 30px;
+    padding: 3px 7px;
+  }
+}
+
 @media (min-width: 1280px) {
   .guide-controls { width: fit-content; max-width: 100%; }
   .guide-controls.guide-coachmark-inline { width: 100%; }

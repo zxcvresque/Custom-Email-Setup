@@ -1,3 +1,17 @@
+## Before you start
+
+This guide is for someone who owns a domain, can change its DNS settings at the registrar, and has a personal <img src="assets/gmail.png" alt="" height="14"> Gmail account. The recommended setup uses one Gmail inbox with a custom address.
+
+<details>
+<summary>Don’t have these yet? See what to prepare</summary>
+
+- **A domain:** Register one with a registrar such as <img src="assets/namecheap.png" alt="" height="14"> [Namecheap](https://www.namecheap.com/domains/). The domain can have a yearly cost. You need access to its DNS settings. Ask its owner or administrator for access if needed.
+- **A protected registrar account:** Turn on two-step verification in the registrar’s security settings before changing DNS.
+- **Cloudflare:** Create a free <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare account](https://dash.cloudflare.com), add your domain, then follow [Connect your domain](#connect-your-domain) below to update nameservers and check DNS.
+- **A personal Gmail inbox:** Use your current <img src="assets/gmail.png" alt="" height="14"> Gmail account, or [create one](https://accounts.google.com/) with **Create account → For my personal use**. This is where forwarded messages will arrive.
+
+</details>
+
 ## What’s the benefit?
 
 - **Use your business name in your email.** For example, `hello@yourbusiness.com`.
@@ -20,7 +34,13 @@
 
 **Outgoing:** your inbox sends through the relay to the recipient.
 
-Have your domain login, your inbox, and an SMTP2GO account ready. Your domain may have a renewal cost. You do not need to run a server.
+Think of DNS as the internet’s phone book. Its records tell services where your website and email should go. Changing nameservers tells the internet which DNS provider to ask.
+
+Have your domain login, your inbox, and an SMTP2GO account ready. You do not need to run a server.
+
+## Why keep Gmail?
+
+<img src="assets/gmail.png" alt="" height="14"> **Gmail stays your familiar inbox.** Cloudflare forwards your custom addresses there, so you can read mail in one place. Gmail includes spam filtering, search, and the tools you already know. People see your custom address when you reply through the relay.
 
 ## Free SMTP relay plans
 
@@ -85,7 +105,7 @@ Copy the exact DNS values shown in your account. See the <img src="assets/smtp2g
 ### <img src="assets/gmail.png" alt="" height="16"> Gmail on the web
 
 1. Go to **Settings → See all settings → Accounts and Import → Send mail as → Add another email address**.
-2. Enter your name and `hello@yourdomain.com`. Keep **Treat as an alias** selected.
+2. Enter your name and `hello@yourdomain.com`. For this one-person, one-inbox setup, keep **Treat as an alias** selected.
 3. Enter the settings below. Open the confirmation email in your inbox and confirm the address.
 4. When writing an email, choose your custom address from **From**.
 
@@ -101,6 +121,12 @@ Password     Password for that SMTP user
 ```
 
 Use the password you made in the relay. See <img src="assets/gmail.png" alt="" height="14"> [Gmail's Send mail as instructions](https://support.google.com/mail/answer/22370).
+
+**A change to know about (checked November 11, 2026):** Google says Gmail will end **Send as** for third-party addresses in January 2027, and may limit new setups before then. This Gmail route may be affected. Forwarding to Gmail is separate; Google recommends a desktop mail client for sending through third-party accounts. Read [Google’s official notice](https://support.google.com/mail/answer/17101213).
+
+**Optional desktop alternative — Thunderbird:** Add Gmail with **Sign in with Google**, then add `hello@yourdomain.com` as a Thunderbird identity and choose SMTP2GO for outgoing mail. Read forwarded messages in Thunderbird and reply or compose as your custom address; mail goes directly through SMTP2GO, so it does not rely on Gmail’s third-party **Send as** feature. Gmail still stores the incoming mail. See [Mozilla’s Gmail setup](https://support.mozilla.org/en-US/kb/thunderbird-and-gmail) and [identity guide](https://support.mozilla.org/en-US/kb/using-identities).
+
+**Alias setting:** Keep **Treat as an alias** selected when you own both addresses and use the same <img src="assets/gmail.png" alt="" height="14"> Gmail inbox. That is our recommended one-Gmail setup. Uncheck it when sending on behalf of another account that receives mail separately. The linked guide unchecks it for its SMTP2GO setup, so you can compare. This setting changes how Gmail treats the address and replies; the SMTP server details stay the same. See [Google’s explanation](https://knowledge.workspace.google.com/admin/users/should-i-uncheck-treat-as-an-alias-in-gmail), then test which address appears on replies.
 
 ## Add DMARC
 
@@ -124,18 +150,16 @@ Use the password you made in the relay. See <img src="assets/gmail.png" alt="" h
 
 1. **Receive.** Send an email to your custom address and make sure it reaches your inbox.
 2. **Send.** Reply from your custom address and make sure the recipient sees it in **From**.
-3. **Check delivery.** Look for SPF, DKIM, and DMARC in the message details. You can also use [Mail Tester](https://www.mail-tester.com/) or [MXToolbox](https://mxtoolbox.com/SuperTool.aspx).
+3. **Check delivery.** Look for SPF, DKIM, and DMARC in the message details. You can also use [Mail Tester](https://www.mail-tester.com/), [MXToolbox](https://mxtoolbox.com/SuperTool.aspx), or [LearnDMARC](https://www.learndmarc.com/) to understand DMARC results.
 
 ## Add a profile picture
 
-**Optional for <img src="assets/gmail.png" alt="" height="14"> Gmail.** You can create a Google Account with your custom address to add a profile picture.
+**Optional for <img src="assets/gmail.png" alt="" height="14"> Gmail.** You can associate your custom address with a Google profile in either of these ways:
 
-1. Open [Google Accounts](https://accounts.google.com/). Choose **Create account → For my personal use**. A private window can help if you're already signed in.
-2. Choose **Use your existing email** and enter `hello@yourdomain.com`.
-3. Find the verification message in your inbox, enter its code, and finish signup.
-4. Sign in at [My Google Account](https://myaccount.google.com/) with your custom address. Add and save a photo.
+- **Recommended: add it to your existing Google Account.** Open [Google Account settings](https://myaccount.google.com/), go to **Personal info → Email → Alternate emails**, add `hello@yourdomain.com`, and verify it from your inbox. This keeps one Google account for the Gmail inbox and custom address.
+- **Choose a separate Google Account** if you want a separate Google identity. Go to [Google Accounts](https://accounts.google.com/), choose **Create account → For my personal use → Use your existing email**, enter `hello@yourdomain.com`, and finish verification. Then add a photo at [My Google Account](https://myaccount.google.com/).
 
-The Google Account is only for the profile. Keep reading and sending mail in your <img src="assets/gmail.png" alt="" height="14"> **Gmail** inbox. The picture may take time to appear. See [Google Account Help](https://support.google.com/accounts/answer/27441) and [profile visibility settings](https://support.google.com/accounts/answer/6304920).
+Both options use the same mail setup; neither creates another inbox. Keep reading and sending mail in the <img src="assets/gmail.png" alt="" height="14"> Gmail inbox configured earlier. Choose one profile route: a custom address can’t be linked as an alternate email to two Google Accounts, and an address already linked to an account can’t be added again. Picture visibility can vary or take time. See [Google’s alternate-email instructions](https://support.google.com/accounts/answer/176347), [profile picture instructions](https://support.google.com/accounts/answer/27442), and [profile visibility settings](https://support.google.com/accounts/answer/6304920).
 
 ## DNS reference
 
