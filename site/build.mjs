@@ -70,7 +70,13 @@ const html = `<!doctype html>
 <a class="skip" href="#guide">Skip to guide</a>
 <header class="topbar">
   <div class="shell topbar-inner">
-    <a class="site-name" href="#top">${svg('mail')}<span>Custom Email Setup</span></a>
+    <div class="site-brand">
+      <a class="site-name" href="#top">${svg('mail')}<span>Custom Email Setup</span></a>
+      <span class="site-star">
+        <a href="${repository}" aria-label="Star this repository on GitHub" aria-describedby="star-tip">${svg('star')}</a>
+        <span id="star-tip" role="tooltip">Star it if you liked it or it helped you</span>
+      </span>
+    </div>
     <nav class="top-links" aria-label="Main navigation">
       <a href="#guide">Guide</a><a href="#free-smtp-relay-plans">Free plans</a><a href="#troubleshooting">Troubleshooting</a>
     </nav>

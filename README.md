@@ -170,4 +170,4 @@ For GitHub Pages, choose **GitHub Actions** as the Pages source and run the **Pu
 
 The site adapts the [Liquid Metal Hero](https://21st.dev/@chowlol202/components/liquid-metal-hero) and [FlowButton](https://21st.dev/@xubohuah/components/flow-button) from 21st.dev. Its theme switcher, contents rail, and troubleshooting disclosures take cues from [Chánh Đại's Theme Switcher](https://21st.dev/@ncdai/components/theme-switcher-1), [Appica's Table of Contents](https://21st.dev/@appica-dev/components/toc/nested-headings), and [Origin UI's Accordion](https://21st.dev/@originui/components/accordion/w-sub-header-and-plus-minus).
 
-Additional interaction references include [MicroKit Bounce Checkbox](https://microkit.co/components/bounce-checkbox) and [MicroKit Next Dot Fill Button](https://microkit.co/components/next-dot-fill-button).
+Additional interaction references include [MicroKit Bounce Checkbox](https://microkit.co/components/bounce-checkbox), [MicroKit Next Dot Fill Button](https://microkit.co/components/next-dot-fill-button), and [MicroKit Spotlight Indicator](https://microkit.co/components/spotlight-indicator).

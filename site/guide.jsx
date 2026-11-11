@@ -121,7 +121,7 @@ const shaderObserver = new IntersectionObserver(([entry]) => {
 });
 shaderObserver.observe(panel);
 
-const links = Array.from(document.querySelectorAll('.guide-rail a'));
+const contentsLists = Array.from(document.querySelectorAll('.guide-rail ol'));
 const chapters = Array.from(document.querySelectorAll('.chapter'));
 const topNav = document.querySelector('.top-links');
 const topLinks = Array.from(topNav.querySelectorAll('a'));
@@ -136,14 +136,32 @@ function selectNav(hash) {
 
 selectNav(location.hash);
 window.addEventListener('hashchange', () => selectNav(location.hash));
-const contentsObserver = new IntersectionObserver(() => {
+function updateContentsSpotlight() {
   const active = chapters.findLast((chapter) => chapter.getBoundingClientRect().top < 150);
-  for (const link of links) {
-    if (link.hash === '#' + active?.id) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
+  for (const list of contentsLists) {
+    let current;
+    for (const link of list.querySelectorAll('a')) {
+      if (link.hash === '#' + active?.id) {
+        link.setAttribute('aria-current', 'location');
+        current = link;
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    }
+    const visible = current && list.getClientRects().length > 0;
+    if (visible) {
+      const bounds = current.getBoundingClientRect();
+      const top = bounds.top - list.getBoundingClientRect().top;
+      list.style.setProperty('--spotlight-top', `${top + 5}px`);
+      list.style.setProperty('--spotlight-height', `${bounds.height - 10}px`);
+    }
+    list.toggleAttribute('data-spotlight', Boolean(visible));
   }
-}, { rootMargin: '-145px 0px -40% 0px' });
+}
+const contentsObserver = new IntersectionObserver(updateContentsSpotlight, { rootMargin: '-145px 0px -40% 0px' });
 for (const chapter of chapters) contentsObserver.observe(chapter);
+const contentsResize = new ResizeObserver(updateContentsSpotlight);
+for (const list of contentsLists) contentsResize.observe(list);
 const mobileContents = document.querySelector('.mobile-contents');
 mobileContents.addEventListener('click', (event) => {
   if (event.target.closest('a')) mobileContents.open = false;
