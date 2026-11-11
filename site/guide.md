@@ -44,7 +44,12 @@ The general process is similar across providers. Verify your domain, add the pro
 
 1. Open the <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare dashboard](https://dash.cloudflare.com), add your domain, and choose the Free plan.
 2. Review the imported DNS records. Keep the records your website or other services still need.
-3. Replace your domain's nameservers at your registrar with the two nameservers shown in your dashboard. In <img src="assets/godaddy.png" alt="" height="14"> **GoDaddy**, look under **My Products → DNS → Nameservers**. In <img src="assets/namecheap.png" alt="" height="14"> **Namecheap**, look under **Domain List → Manage → Nameservers** and choose **Custom DNS**.
+3. Replace your domain's nameservers at your registrar with the two nameservers shown in your dashboard.
+
+   <img src="assets/godaddy.png" alt="" height="14"> **GoDaddy**: My Products → DNS → Nameservers → Change → Enter my own nameservers
+
+   <img src="assets/namecheap.png" alt="" height="14"> **Namecheap**: Domain List → Manage → Nameservers → Custom DNS
+
 4. Wait until your domain is active before continuing. Nameserver changes can take time to propagate.
 
 ## Route incoming mail
