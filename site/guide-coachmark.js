@@ -24,6 +24,21 @@ if (controls && controls.querySelectorAll('button[data-guide-toggle]').length >=
   coachmark.querySelector('.guide-coachmark-dismiss').addEventListener('click', dismiss);
   controls.querySelectorAll('button[data-guide-toggle]').forEach((button) => button.addEventListener('click', dismiss, { once: true }));
 
+  function placeCoachmark() {
+    const wideDesktop = matchMedia('(min-width: 1280px)').matches;
+    controls.classList.toggle('guide-coachmark-inline', !wideDesktop);
+    if (!wideDesktop) return;
+
+    controls.classList.remove('guide-coachmark-inline');
+    const controlsRight = controls.getBoundingClientRect().right;
+    const cardWidth = coachmark.getBoundingClientRect().width;
+    const rightSpace = innerWidth - controlsRight - 24;
+    controls.classList.toggle('guide-coachmark-inline', rightSpace < cardWidth + 16);
+  }
+
+  placeCoachmark();
+  window.addEventListener('resize', placeCoachmark, { passive: true });
+
   // Clear the intro before the later scroll-triggered prompts become eligible.
   let scrollFrame = 0;
   document.addEventListener('scroll', () => {
