@@ -1,408 +1,173 @@
-<div align="center">
+# Custom Email Setup
 
-![banner](https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/banner.png)
+Send and receive mail at `hello@yourdomain.com` using the inbox you already have. The forwarding and sending services have free plans. You need a domain you own, which may have a registration or renewal cost.
 
-![Free](https://img.shields.io/badge/Cost-100%25%20Free-22c55e?style=for-the-badge&logo=checkmarx&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-Email_Routing-F6821F?style=for-the-badge&logo=cloudflare&logoColor=white)
-![SMTP2GO](https://img.shields.io/badge/SMTP2GO-1k%2Fmo_Free-3b82f6?style=for-the-badge&logo=minutemailer&logoColor=white)
-![Gmail](https://img.shields.io/badge/Works_With-Gmail_%2F_Outlook-EA4335?style=for-the-badge&logo=gmail&logoColor=white)
+[Open the interactive setup guide](https://zxcvresque.github.io/Custom-Email-Setup/).
 
-</div>
+Guide by [Zxcvresque](https://github.com/zxcvresque). Original idea by [iamavu](https://iamavu.com).
 
----
+## How it works
 
-## 📬 What You'll Build
+| Service | What it does |
+| --- | --- |
+| <img src="assets/cloudflare.png" alt="" height="16"> **Cloudflare Email Routing** | Receives mail for your domain and forwards it to your inbox. |
+| <img src="assets/smtp2go.png" alt="" height="16"> **SMTP2GO** | Sends mail from your verified domain through an SMTP relay. |
+| <img src="assets/gmail.png" alt="" height="16"> **Gmail** or <img src="assets/outlook.png" alt="" height="16"> **Outlook** | Your destination inbox. Use an email client that supports external SMTP to send from your custom address. |
 
-A fully working `yourname@yourdomain.com` email address — receive in Gmail/Outlook, send from Gmail/Outlook — using only **free** services. No hosting required.
+**Incoming:** sender → your custom address → forwarding → your inbox.
 
-| Service | Role | Cost |
-|---|---|---|
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="16"/> **Cloudflare** | DNS + inbound email forwarding | Free forever |
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="16"/> **SMTP2GO** | Outbound sending via SMTP | Free (1,000/mo · 200/day) |
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/gmail.png" height="16"/> **Gmail** / <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/outlook.png" height="16"/> **Outlook** | Your actual inbox | Your existing account |
+**Outgoing:** your email client → authenticated SMTP relay → recipient.
 
-### 🗺️ Architecture
+Have a domain you own, your registrar login, an inbox you can verify, and an account with the sending provider ready. Domain registration or renewal may cost money. There is no server to run.
 
-```mermaid
-flowchart TD
-    A["📨 Sender\nanyone@anywhere.com"]:::sender -->|"to hello@yourdomain.com"| B
+## Free SMTP relay plans
 
-    subgraph CF ["☁️ Cloudflare — Email Routing"]
-        B["🔀 MX Records\nhello@yourdomain.com"]:::cloudflare
-    end
+The guide uses <img src="assets/smtp2go.png" alt="" height="14"> **SMTP2GO**. Compare these free options if you need a different allowance.
 
-    B -->|"forwarded instantly"| C["📥 Your Gmail / Outlook\ndestination inbox"]:::inbox
+| SMTP relay | Daily cap | Monthly allowance | Notes |
+| --- | --- | --- | --- |
+| <img src="assets/smtp2go.png" alt="" height="14"> [SMTP2GO](https://support.smtp2go.com/hc/en-gb/articles/223087947-Free-Plan) | 200 | 1,000 | Used in this guide |
+| <img src="assets/resend.png" alt="" height="14"> [Resend](https://resend.com/pricing) | 100 | 3,000 | Inbound mail through its own service shares the transactional quota |
+| <img src="assets/mailjet.png" alt="" height="14"> [Mailjet](https://www.mailjet.com/pricing/) | 200 | 6,000 | Free plan has a 1,000-contact limit |
+| <img src="assets/mailgun.png" alt="" height="14"> [Mailgun](https://www.mailgun.com/pricing/) | 100 | About 2,800 to 3,100 | Based on daily use. No separate monthly limit listed |
+| <img src="assets/brevo.png" alt="" height="14"> [Brevo](https://www.brevo.com/products/transactional-email/) | 300 | About 8,400 to 9,300 | Based on daily use. Transactional sending may require activation |
+| <img src="assets/mailersend.svg" alt="" height="14"> [MailerSend](https://www.mailersend.com/help/plans-features-and-limits) | 100 | 500 | Free sending requires approval |
 
-    C -->|"compose as hello@yourdomain.com"| D
+Daily and monthly caps both apply where specified. Prices, allowances, and approval rules can change. Check the linked plans and confirm they support the kind of email you send.
 
-    subgraph S2 ["🔵 SMTP2GO — Free 1,000/mo"]
-        D["📤 mail.smtp2go.com:587\nSPF + DKIM signed"]:::smtp
-    end
+The general process is similar across providers. Verify your domain, add the provider's DNS records, then enter its SMTP credentials in your client. For another relay, use its documentation or ask ChatGPT or another AI assistant to help adapt the steps. Confirm the settings in the provider's dashboard.
 
-    D -->|"delivered"| E["📬 Recipient's Inbox"]:::recipient
+### When you need more volume
 
-    classDef sender     fill:#1e293b,stroke:#64748b,color:#e2e8f0
-    classDef cloudflare fill:#7c2d00,stroke:#f6821f,color:#fed7aa
-    classDef inbox      fill:#14532d,stroke:#4ade80,color:#bbf7d0
-    classDef smtp       fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
-    classDef recipient  fill:#3b0764,stroke:#a855f7,color:#e9d5ff
+| Volume | Services to compare | Estimated monthly cost |
+| --- | --- | --- |
+| Up to 1,000 | <img src="assets/smtp2go.png" alt="" height="14"> [SMTP2GO Free](https://www.smtp2go.com/pricing/) | $0 |
+| Up to 10,000 | <img src="assets/smtp2go.png" alt="" height="14"> [SMTP2GO Starter](https://www.smtp2go.com/pricing/) | About $15 |
+| Up to 50,000 | <img src="assets/resend.png" alt="" height="14"> [Resend](https://resend.com/pricing) or <img src="assets/brevo.png" alt="" height="14"> [Brevo](https://www.brevo.com/pricing/) | Check current pricing for your volume |
+| 100,000 or more | <img src="assets/Postmark.svg" alt="" height="14"> [Postmark](https://postmarkapp.com/pricing) or <img src="assets/sendgrid.png" alt="" height="14"> [SendGrid](https://sendgrid.com/pricing/) | Check current pricing for your volume |
+
+**Pricing note.** These estimates may be out of date. Check the linked pages for current rates and sending allowances. You can keep the same address and inbound forwarding when switching your outbound relay.
+
+## Connect your domain
+
+1. Open the <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare dashboard](https://dash.cloudflare.com), add your domain, and choose the Free plan.
+2. Review the imported DNS records. Keep the records your website or other services still need.
+3. Replace your domain's nameservers at your registrar with the two nameservers shown in your dashboard. In <img src="assets/godaddy.png" alt="" height="14"> **GoDaddy**, look under **My Products → DNS → Nameservers**. In <img src="assets/namecheap.png" alt="" height="14"> **Namecheap**, look under **Domain List → Manage → Nameservers** and choose **Custom DNS**.
+4. Wait until your domain is active before continuing. Nameserver changes can take time to propagate.
+
+## Route incoming mail
+
+1. In the <img src="assets/cloudflare.png" alt="" height="14"> **Cloudflare** dashboard, open **Email → Email Routing**. Add your destination inbox and click the verification link sent to it.
+2. Under **Routing rules**, create `hello@yourdomain.com` and choose **Send to an email** with the verified inbox as its destination.
+3. Enable Email Routing and add the DNS records shown in the dashboard. If the domain already receives mail through another service, review its existing MX records before switching.
+4. Send a test message from a different account to `hello@yourdomain.com`.
+
+Repeat the rule for aliases such as `info@` or `support@`. Enable a **catch-all** if you also want to receive messages to unmatched addresses. See the <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare Email Routing docs](https://developers.cloudflare.com/email-routing/).
+
+## Set up the SMTP relay
+
+1. Create an <img src="assets/smtp2go.png" alt="" height="14"> [SMTP2GO account](https://app.smtp2go.com) and open **Sending → Verified Senders → Sender Domains**.
+2. Add your domain. Copy the CNAME names and targets shown in the dashboard into your DNS settings, including the sender and DKIM records. Add the tracking record if you plan to use it.
+3. Set these email records to **DNS only**. Return to **Sender Domains** and wait for **Verified**.
+4. Open **SMTP Users**, create a user, and save its username and password for your email client.
+
+Use the exact DNS values from your account. The relay generates those values for your domain. See the <img src="assets/smtp2go.png" alt="" height="14"> [SMTP2GO setup guide](https://support.smtp2go.com/hc/en-gb/articles/12747932085145-Quick-Start-Guide).
+
+## Send from your inbox
+
+### <img src="assets/gmail.png" alt="" height="16"> Gmail on the web
+
+1. Open **Settings → See all settings → Accounts and Import → Send mail as → Add another email address**.
+2. Enter your display name and `hello@yourdomain.com`. Keep **Treat as an alias** selected for this setup.
+3. Enter the SMTP settings below and submit. Open the confirmation email forwarded to your inbox and confirm the address.
+4. In a new message, open the **From** menu and choose your custom address.
+
+### <img src="assets/outlook.png" alt="" height="16"> Outlook, Apple Mail, or another email client
+
+Client support varies. Use these settings if your client lets you configure an external outgoing SMTP server for your custom address. Forwarding provides an inbox destination, so the custom address itself has no IMAP credentials.
+
+```text
+SMTP server  mail.smtp2go.com
+Port         587 with STARTTLS, or 465 with implicit TLS
+Username     SMTP user created in the relay dashboard
+Password     Password for that SMTP user
 ```
 
----
+The SMTP password comes from the relay. For browser setup, see <img src="assets/gmail.png" alt="" height="14"> [Gmail's Send mail as instructions](https://support.google.com/mail/answer/22370).
 
-## 🧭 Prerequisites
+## Add DMARC
 
-- [ ] A domain you own — <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/godaddy.png" height="14"/> [GoDaddy](https://godaddy.com), <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/namecheap.png" height="14"/> [Namecheap](https://namecheap.com), or any registrar
-- [ ] A <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="14"/> [Cloudflare account](https://cloudflare.com) — free
-- [ ] An <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="14"/> [SMTP2GO account](https://app.smtp2go.com) — free
-- [ ] A <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/gmail.png" height="14"/> Gmail or <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/outlook.png" height="14"/> Outlook inbox to forward into
+DMARC lets you monitor mail that claims to come from your domain and publish a policy for messages that fail alignment. If you already have a DMARC record, update it in place.
 
-That's it. No server. No hosting. No credit card.
+| DNS field | Example |
+| --- | --- |
+| Type | `TXT` |
+| Name | `_dmarc` |
+| Value | `v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com` |
 
----
+Set up the reporting address first. Start at `p=none`, review the reports for all legitimate senders, then move to `p=quarantine` or `p=reject` when you're ready. See <img src="assets/cloudflare.png" alt="" height="14"> [Cloudflare's DMARC guide](https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/).
 
-## ⚠️ Free Plan Limits
+## Test both directions
 
-Know these before you start:
+1. **Receive.** From another account, send to your custom address and confirm it reaches your destination inbox.
+2. **Send.** Compose from your custom address to another inbox and confirm the visible **From** address.
+3. **Check authentication.** Open the received message's full headers and look for SPF, DKIM, and DMARC results. You can also send a message to [Mail Tester](https://www.mail-tester.com/) or inspect DNS with [MXToolbox](https://mxtoolbox.com/SuperTool.aspx).
 
-| | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="14"/> Cloudflare Email Routing | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="14"/> SMTP2GO Free |
-|---|---|---|
-| **Inbound (receiving)** | ✅ Unlimited | — |
-| **Outbound (sending)** | — | 1,000 emails/month |
-| **Daily send cap** | — | 200 emails/day |
-| **Custom addresses** | ✅ Unlimited | — |
-| **Catch-all rule** | ✅ Yes | — |
-| **SMTP credentials** | — | 1 user |
-| **Cost** | 🆓 Free forever | 🆓 Free forever |
+## Add a profile picture
 
-> 💬 **Is this enough?** For personal use, newsletters to a small list, contact forms, or side projects — yes, easily. If you need to send more, [SMTP2GO paid plans](https://www.smtp2go.com/pricing/) start at $15/month for 50,000 emails.
+**Optional, for <img src="assets/gmail.png" alt="" height="14"> Gmail.** Once both tests pass, create a personal Google Account using your custom address to associate it with a Google profile picture.
 
-### 📈 Scaling Path
+1. Open [Google Accounts](https://accounts.google.com/) in a private window if you're already signed in. Choose **Create account → For my personal use**.
+2. Select **Use your existing email** and enter `hello@yourdomain.com`.
+3. Open the verification message in the inbox that receives your forwarded mail, enter the code, and finish signup.
+4. Sign in at [My Google Account](https://myaccount.google.com/) with your custom address. Click your profile picture or initial, upload a photo, and save it.
 
-If you outgrow the free tier, here's how to scale — **no architecture changes needed**, just swap the SMTP provider:
+The separate Google Account manages the custom address's profile. Continue sending and receiving in the <img src="assets/gmail.png" alt="" height="14"> **Gmail** inbox configured earlier, whether you already had it or created it for this setup. Picture visibility can vary by recipient and can take time to update. See [Google Account Help](https://support.google.com/accounts/answer/27441) and [profile visibility settings](https://support.google.com/accounts/answer/6304920).
 
-```mermaid
-flowchart LR
-    A["🌱 Personal\n< 1,000/mo"]:::free -->|"growing list"| B
-    B["🚀 Small Business\n1k–50k/mo"]:::starter -->|"high volume"| C
-    C["🏢 Production\n50k+/mo"]:::pro
+## DNS reference
 
-    subgraph T1 ["Free Tier"]
-        A
-    end
-    subgraph T2 ["Paid SMTP"]
-        B
-        C
-    end
+| Record | Where to get its value | Purpose |
+| --- | --- | --- |
+| MX | <img src="assets/cloudflare.png" alt="" height="14"> **Cloudflare Email Routing** dashboard | Deliver inbound mail to the forwarding service |
+| TXT / SPF | <img src="assets/cloudflare.png" alt="" height="14"> **Cloudflare Email Routing** dashboard | SPF record managed for routing |
+| CNAME | <img src="assets/smtp2go.png" alt="" height="14"> **SMTP2GO** verified sender dashboard | Sender authentication, DKIM, and optional tracking |
+| TXT at `_dmarc` | Your DMARC policy | Report or enforce alignment |
 
-    classDef free    fill:#14532d,stroke:#4ade80,color:#bbf7d0
-    classDef starter fill:#1e3a5f,stroke:#3b82f6,color:#bfdbfe
-    classDef pro     fill:#3b0764,stroke:#a855f7,color:#e9d5ff
-```
+Keep email records DNS only. Copy account-specific DNS values from the relevant dashboard. If your root domain already publishes SPF, review the existing policy before making changes. A hostname should have only one SPF policy.
 
-| Stage | Volume | Recommended Service | Est. Cost |
-|---|---|---|---|
-| 🌱 **Personal** | < 1,000/mo | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="14"/> SMTP2GO Free ← *you are here* | $0 |
-| 📬 **Growing** | up to 10,000/mo | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="14"/> [SMTP2GO Starter](https://www.smtp2go.com/pricing/) | ~$15/mo |
-| 🚀 **Small Biz** | up to 50,000/mo | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/resend.png" height="14"/> [Resend](https://resend.com/pricing) or <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/brevo.png" height="14"/> [Brevo](https://www.brevo.com/pricing/) | ~$15–20/mo |
-| 🏢 **Production** | 100k+/mo | <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/Postmark.svg" height="14"/> [Postmark](https://postmarkapp.com/pricing) or <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/sendgrid.png" height="14"/> [SendGrid](https://sendgrid.com/pricing/) | ~$15–$50+/mo |
-
-> 🔁 **Switching is painless** — Cloudflare Email Routing (inbound) never changes. You only update the SMTP credentials in Gmail/Outlook and swap the 3 SMTP2GO CNAMEs in Cloudflare DNS for your new provider's records. Your `hello@yourdomain.com` address stays exactly the same.
-
----
-
-## 🚀 Step 1 — Add Your Domain to <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="18"/> Cloudflare
-
-Cloudflare needs to manage your DNS. Your registrar stays the same — you just point it at Cloudflare's nameservers.
-
-### 1.1 Add your site
-
-1. Log in → [dash.cloudflare.com](https://dash.cloudflare.com)
-2. **Add a site** → enter your domain → choose **Free plan**
-3. Cloudflare scans your existing DNS records — review and continue
-
-### 1.2 Update nameservers at your registrar
-
-Cloudflare shows you two nameservers like:
-
-```
-aria.ns.cloudflare.com
-bob.ns.cloudflare.com
-```
-
-Go to your registrar and replace the current nameservers with these.
-
-**<img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/godaddy.png" height="14"/> GoDaddy:** My Products → DNS → Nameservers → Change → Enter my own nameservers
-
-**<img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/namecheap.png" height="14"/> Namecheap:** Domain List → Manage → Nameservers → Custom DNS
-
-> ⏳ Cloudflare usually activates within minutes. Full propagation can take up to 24h.
-
----
-
-## 📥 Step 2 — Set Up Inbound Email (<img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="16"/> Cloudflare Email Routing)
-
-Makes `hello@yourdomain.com` forward to your real inbox — free, no receiving limits.
-
-### 2.1 Verify your destination inbox
-
-1. Cloudflare Dashboard → **Email → Email Routing → Destination addresses**
-2. **Add destination address** → enter your Gmail or Outlook address
-3. Open the verification email Cloudflare sends and click the link ✅
-
-### 2.2 Create your custom address
-
-1. **Email Routing → Routing rules → Custom addresses → Create address**
-
-```
-Custom address:  hello@yourdomain.com
-Action:          Send to → you@gmail.com
-```
-
-Repeat for as many as you need:
-
-```
-hello@yourdomain.com   → you@gmail.com
-info@yourdomain.com    → you@gmail.com
-support@yourdomain.com → you@gmail.com
-```
-
-> 💡 **Catch-all:** Email Routing → Routing rules → Catch-all address → Edit → Send to → you@gmail.com → Enable ✅  
-> Any address on your domain that doesn't match a rule (including typos) will still land in your inbox.
-
-### 2.3 Enable Email Routing
-
-1. **Email Routing → Settings → Enable Email Routing → Add records and enable**
-
-Cloudflare automatically adds and **locks** these records:
-
-```
-Type   Name   Content                                 Priority
-MX     @      route1.mx.cloudflare.net                13
-MX     @      route2.mx.cloudflare.net                37
-TXT    @      v=spf1 include:_spf.mx.cloudflare.net ~all
-```
-
-> 🔒 These are managed by Cloudflare — you can't accidentally delete them.
-
-**✅ Done.** Send a test email to `hello@yourdomain.com` — it should land in your inbox in seconds.
-
----
-
-## 📤 Step 3 — Set Up Outbound Email (<img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="16"/> SMTP2GO)
-
-Lets you send from `hello@yourdomain.com` through Gmail or Outlook.
-
-### 3.1 Sign up and add your sender domain
-
-1. Sign up at [app.smtp2go.com](https://app.smtp2go.com)
-2. Go to **Sending → Verified Senders → Sender Domains → Add Sender Domain**
-3. Enter `yourdomain.com`
-
-SMTP2GO gives you **3 CNAME records** to add in Cloudflare:
-
-```
-Type    Name                             Value
-CNAME   em1234.yourdomain.com      →    em1234.smtp2go.net
-CNAME   s1._domainkey.yourdomain.com →  s1.dkim.smtp2go.net
-CNAME   track.yourdomain.com       →    track.smtp2go.net    ← optional
-```
-
-> ⚠️ Copy the **exact values from your SMTP2GO dashboard** — the above are examples only.
-
-### 3.2 Add the CNAMEs in Cloudflare
-
-**DNS → Records → Add record** for each CNAME:
-- Proxy status: **DNS-only** 🔘 — email records must never be proxied (orange cloud off)
-
-### 3.3 Wait for verification
-
-Back in SMTP2GO → **Sender Domains** → wait for ✅ **Verified** (usually 5–15 minutes).
-
-### 3.4 Create SMTP credentials
-
-**SMTP Users → Add SMTP User** → save your **username** and **password** for the next step.
-
----
-
-## 📧 Step 4 — Connect to <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/gmail.png" height="16"/> Gmail or <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/outlook.png" height="16"/> Outlook
-
-### Option A — Gmail "Send mail as"
-
-1. **Gmail → Settings ⚙️ → See all settings → Accounts and Import**
-2. **Send mail as → Add another email address**
-
-```
-Name:           Your Name
-Email address:  hello@yourdomain.com
-☑️ Treat as an alias
-```
-
-3. **Next Step** → SMTP configuration:
-
-```
-SMTP Server:   mail.smtp2go.com
-Port:          587
-Security:      TLS
-Username:      your SMTP2GO username
-Password:      your SMTP2GO password
-```
-
-4. Gmail sends a verification code to `hello@yourdomain.com` → arrives in your inbox via Cloudflare → enter the code ✅
-
-> 💡 No Gmail App Password needed — Gmail authenticates to SMTP2GO, not to itself.
-
----
-
-### Option B — Outlook / Apple Mail / Any client
-
-```
-Outgoing SMTP server:   mail.smtp2go.com
-Port:                   587  (TLS)   or   465  (SSL)
-Username:               your SMTP2GO username
-Password:               your SMTP2GO password
-```
-
-If port 587 is blocked on your network, try: `2525` · `8025` · `80`
-
----
-
-## 🛡️ Step 5 — Add DMARC (Recommended)
-
-Prevents spoofing of your domain. Takes 30 seconds. Do it.
-
-**Cloudflare → DNS → Add record:**
-
-```
-Type:     TXT
-Name:     _dmarc
-Content:  v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com; fo=1; aspf=r; pct=100
-```
-
-### Tighten the policy over time:
-
-```
-Week 1–4:    p=none        → monitor only, nothing blocked
-Month 2:     p=quarantine  → suspicious mail goes to spam
-Month 3+:    p=reject      → full protection, spoofed mail blocked
-```
-
-> 📊 Use **Cloudflare → Email → DMARC Management** to read reports and know when it's safe to tighten.
-
----
-
-## ✅ Step 6 — Test Everything
-
-**Receive test:**
-```
-Send any email to hello@yourdomain.com
-→ Should arrive in your Gmail/Outlook within seconds ✅
-```
-
-**Send test:**
-```
-Gmail → Compose → From: hello@yourdomain.com → send to yourself
-Check headers:
-  ✅ SPF=pass
-  ✅ DKIM=pass
-```
-
-**Deliverability score:**
-1. Visit [mail-tester.com](https://www.mail-tester.com)
-2. Send one email from your custom address to their test address
-3. Aim for **9/10 or 10/10** 🎯
-
----
-
-## 🗂️ DNS Records at a Glance
-
-```
-┌────────┬──────────────────────────────┬─────────────────────────────┬──────────┐
-│ Type   │ Name                         │ Content                     │ Proxy    │
-├────────┼──────────────────────────────┼─────────────────────────────┼──────────┤
-│ MX     │ @                            │ route1.mx.cloudflare.net    │ DNS-only │
-│ MX     │ @                            │ route2.mx.cloudflare.net    │ DNS-only │
-│ TXT    │ @                            │ v=spf1 include:_spf.mx...   │ DNS-only │
-├────────┼──────────────────────────────┼─────────────────────────────┼──────────┤
-│ CNAME  │ em1234.yourdomain.com        │ → from SMTP2GO dashboard    │ DNS-only │
-│ CNAME  │ s1._domainkey.yourdomain.com │ → from SMTP2GO dashboard    │ DNS-only │
-│ CNAME  │ track.yourdomain.com         │ → from SMTP2GO (optional)   │ DNS-only │
-├────────┼──────────────────────────────┼─────────────────────────────┼──────────┤
-│ TXT    │ _dmarc                       │ v=DMARC1; p=none; rua=...   │ DNS-only │
-└────────┴──────────────────────────────┴─────────────────────────────┴──────────┘
-
-↑ Top 3 rows added automatically by Cloudflare.
-  SMTP2GO rows use YOUR exact values from the SMTP2GO dashboard.
-```
-
----
-
-## 🔧 Troubleshooting
+## Troubleshooting
 
 <details>
-<summary>❌ Cloudflare says "Missing DNS records"</summary>
-
-Go to **Email → Email Routing → Settings** and click **"Enable Email Routing" → "Add records and enable"**.
-Cloudflare adds the MX and SPF records automatically.
+<summary>Routing shows missing DNS records</summary>
+<p>Open <strong>Email Routing → Settings</strong> and review the required records. Check for MX records from an old mail service before switching.</p>
 </details>
 
 <details>
-<summary>❌ Forwarded emails not arriving in Gmail</summary>
-
-Since July 2025, Cloudflare requires the **sending domain to pass SPF or DKIM** before forwarding. This is the sender's issue, not yours — ask them to fix authentication on their mail provider.
+<summary>Forwarded messages are missing</summary>
+<p>Check that routing is active, the destination is verified, and the address matches a rule. Check Spam and review the routing activity log for rejection details.</p>
 </details>
 
 <details>
-<summary>❌ SMTP2GO error: "503 unable to verify sender address"</summary>
-
-You're sending from a domain not yet verified in SMTP2GO.
-Go to **Sending → Verified Senders → Sender Domains** and finish verification first.
+<summary>The SMTP relay rejects the sender address</summary>
+<p>In the <img src="assets/smtp2go.png" alt="" height="14"> <strong>SMTP2GO</strong> dashboard, confirm that the sender domain is verified and matches the address in your client's From field.</p>
 </details>
 
 <details>
-<summary>❌ Gmail verification code never arrived</summary>
-
-Gmail sends the code to `hello@yourdomain.com`, which goes through Cloudflare forwarding.
-Make sure **Step 2 is fully complete** before starting Step 4 — routing must be enabled and destination must be verified.
+<summary>The send-as verification email never arrived</summary>
+<p>Complete the inbound test first. Then retry verification and check Spam in the destination inbox.</p>
 </details>
 
 <details>
-<summary>❌ SMTP2GO CNAMEs won't verify</summary>
-
-- Set proxy to **DNS-only** (grey cloud 🔘) in Cloudflare — not proxied
-- Copy values **exactly** from your SMTP2GO dashboard, not from this README
-- Wait 10–15 minutes and refresh
+<summary>The sender CNAMEs will not verify</summary>
+<p>Check the names and targets against the relay dashboard. Set the records to DNS only and allow time for DNS propagation.</p>
 </details>
 
----
+## Preview the website locally
 
-## 💡 Good to Know
+Run `npm ci`, then `npm run build`. Open `dist/index.html` in your browser. The build turns this README into the website's guide content and bundles its assets locally.
 
-- 📨 **Receiving** via Cloudflare is free with **no limits whatsoever**
-- 📤 **Sending** via SMTP2GO free tier: **1,000 emails/month**, **200/day**
-- 📬 Add multiple addresses — `hello@`, `info@`, `work@` — all to one inbox
-- 🪤 Enable a **catch-all** in Cloudflare to catch any address on your domain
-- 🔐 Start DMARC at `p=none`, move to `p=reject` after 1–2 months of clean reports
-- 🚫 **Never proxy email records** in Cloudflare — always DNS-only for MX and CNAMEs
+For GitHub Pages, choose **GitHub Actions** as the Pages source and run the **Publish guide** workflow. See [GitHub Pages publishing sources](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
----
+The site adapts the [Liquid Metal Hero](https://21st.dev/@chowlol202/components/liquid-metal-hero) and [FlowButton](https://21st.dev/@xubohuah/components/flow-button) from 21st.dev. Its theme switcher, contents rail, and troubleshooting disclosures take cues from [Chánh Đại's Theme Switcher](https://21st.dev/@ncdai/components/theme-switcher-1), [Appica's Table of Contents](https://21st.dev/@appica-dev/components/toc/nested-headings), and [Origin UI's Accordion](https://21st.dev/@originui/components/accordion/w-sub-header-and-plus-minus).
 
-## 📚 Resources
-
-| Resource | Link |
-|---|---|
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="14"/> Cloudflare Email Routing Docs | [developers.cloudflare.com/email-routing](https://developers.cloudflare.com/email-routing) |
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/smtp2go.png" height="14"/> SMTP2GO Knowledge Base | [support.smtp2go.com](https://support.smtp2go.com) |
-| <img src="https://raw.githubusercontent.com/zxcvresque/Custom-Email-Setup/main/assets/cloudflare.png" height="14"/> DMARC Management | [Cloudflare Dashboard → Email → DMARC](https://dash.cloudflare.com) |
-| Deliverability Tester | [mail-tester.com](https://www.mail-tester.com) |
-| DNS Lookup Tool | [mxtoolbox.com/SuperTool](https://mxtoolbox.com/SuperTool.aspx) |
-
----
-
-<div align="center">
-
-[![footer](https://capsule-render.vercel.app/api?type=waving&color=F6821F&height=140&section=footer&text=Built%20on%20an%20idea%20by%20%40iamavu%20%E2%86%97&fontSize=16&fontColor=fed7aa&fontAlignY=55&desc=Cloudflare%20%C2%B7%20SMTP2GO%20%C2%B7%20%240%2Fmonth%20%7C%20No%20hosting%2C%20no%20credit%20card%2C%20any%20registrar&descAlignY=72&descSize=12&descColor=94a3b8&animation=fadeIn)](https://iamavu.com)
-
-**⭐ Star this repo if it saved you from paying for email hosting!**
-
-</div>
+Additional interaction references include [MicroKit Bounce Checkbox](https://microkit.co/components/bounce-checkbox) and [MicroKit Next Dot Fill Button](https://microkit.co/components/next-dot-fill-button).

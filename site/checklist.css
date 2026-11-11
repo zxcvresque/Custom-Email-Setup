@@ -1,0 +1,94 @@
+.checklist-panel {
+  margin: 28px 0 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.chapter .checklist-panel { border-bottom: 1px solid var(--line); }
+
+.checklist-panel .checklist-summary {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto 13px;
+  align-items: center;
+  gap: 9px;
+  min-height: 49px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  font-size: .875rem;
+}
+
+.checklist-summary > svg { color: var(--accent); }
+.checklist-summary::after { grid-column: 4; }
+
+.checklist-count {
+  grid-column: 3;
+  color: var(--muted);
+  font-size: .75rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.checklist-panel .setup-checklist {
+  min-width: 0;
+  margin: 0;
+  padding: 5px 14px 10px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  font-size: .82rem;
+}
+
+.checklist-panel .checklist-item + .checklist-item {
+  border-top: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+}
+
+.checklist-item[data-suggested] .check-label { font-weight: 620; }
+.checklist-item[data-suggested] .check-box {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent),
+              0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.checklist-panel:not([open])[data-has-suggestion] .checklist-summary {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .checklist-item[data-suggested] .check-box { animation: checklist-nudge 650ms var(--ease); }
+
+  @keyframes checklist-nudge {
+    40% { transform: scale(1.13); }
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --checklist-width: 270px;
+    --checklist-edge: max(18px, calc((100vw - 1500px) / 2));
+    --checklist-bottom: 96px;
+  }
+
+  .checklist-panel.is-floating {
+    position: fixed;
+    inset: auto var(--checklist-edge) var(--checklist-bottom) auto;
+    z-index: 2;
+    width: var(--checklist-width);
+    max-height: calc(100dvh - var(--header) - var(--checklist-bottom) - 18px);
+    overflow-y: auto;
+    margin: 0;
+    box-shadow: 0 12px 38px color-mix(in srgb, var(--ink) 13%, transparent);
+  }
+
+  .checklist-panel.is-floating:not([data-guide-started]):not(:focus-within) {
+    visibility: hidden;
+  }
+}
+
+@media (min-width: 1180px) {
+  .guide-layout:has(.checklist-panel.is-floating) {
+    padding-inline-end: calc(var(--checklist-width) + var(--checklist-edge) + 18px - max(48px, (100vw - 1320px) / 2));
+  }
+}
