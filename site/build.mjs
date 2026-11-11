@@ -10,6 +10,7 @@ const publicUrl = 'https://zxcvresque.github.io/Custom-Email-Setup/';
 const pageTitle = 'Free Custom Email Setup for Your Domain | Zxcvresque';
 const description = 'Learn how to set up a custom domain email address with free forwarding, a free SMTP relay, and the inbox you already use.';
 const tokens = md.parse(guide, {});
+const plainTokens = md.parse(await readFile('site/plain-guide.md', 'utf8'), {});
 const chapters = [];
 for (let i = 0; i < tokens.length; i++) {
   if (tokens[i].type !== 'heading_open' || tokens[i].tag !== 'h2') continue;
@@ -21,6 +22,45 @@ for (let i = 0; i < tokens.length; i++) {
     id: title.toLowerCase().replace(/[^a-z0-9 ]/g, '').replaceAll(' ', '-'),
     body: md.renderer.render(tokens.slice(i + 3, end < 0 ? undefined : end), md.options, {}),
   });
+}
+
+const plainSections = new Map();
+for (let i = 0; i < plainTokens.length; i++) {
+  if (plainTokens[i].type !== 'heading_open' || plainTokens[i].tag !== 'h2') continue;
+  const title = plainTokens[i + 1].content;
+  const end = plainTokens.findIndex((token, index) => index > i && token.type === 'heading_open' && token.tag === 'h2');
+  plainSections.set(title, md.renderer.render(plainTokens.slice(i + 3, end < 0 ? undefined : end), md.options, {}));
+}
+if (chapters.some(({ title }) => !plainSections.has(title))) throw new Error('A plain-language section is missing.');
+
+function recommendedBody(title, body) {
+  if (title === 'Free SMTP relay plans') {
+    return body
+      .replace('The guide uses ', 'The recommended route uses ')
+      .replace('This guide uses ', 'The recommended route uses ')
+      .replace('Compare these free options if you need a different allowance.', 'Cloudflare forwards incoming mail and Gmail is the inbox. Other free relay options remain below.')
+      .replace('The table lists other free options too.', 'Cloudflare forwards incoming mail and Gmail is the inbox. Other free relay options remain in the table below.');
+  }
+  if (title === 'Send from your inbox') {
+    return body.replace(
+      /<p>(?:Client support varies\.|Some email apps support these settings too\.)[\s\S]*?<\/p>/,
+      '<p>Recommended: use Gmail on the web with SMTP2GO. Other email clients can use these settings if they support an external SMTP server.</p>',
+    );
+  }
+  if (title === 'How it works') {
+    return body.replace(
+      'Your destination inbox. Use an email client that supports external SMTP to send from your custom address.',
+      'Your inbox. This guide uses Gmail, Cloudflare forwarding, and SMTP2GO for replies.',
+    ).replace(
+      'Your inbox. Gmail is used in this guide to send from your custom address.',
+      'Your inbox. Recommended: read mail in Gmail, with Cloudflare forwarding and SMTP2GO for replies.',
+    );
+  }
+  return body;
+}
+
+function structureSignature(html) {
+  return Array.from(html.matchAll(/<[^>]+>/g), ([tag]) => tag.replace(/\s+/g, ' ').trim()).join('');
 }
 
 const svg = (name) => octicons[name].toSVG({ 'aria-hidden': 'true', width: 16, height: 16 });
@@ -50,13 +90,26 @@ const nav = chapters.map(({ title, id }) => `<li><a href="#${id}">${md.utils.esc
 const sections = chapters.map(({ title, id, body }) => {
   const steps = ['connect-your-domain', 'route-incoming-mail', 'set-up-the-smtp-relay', 'send-from-your-inbox', 'add-dmarc', 'test-both-directions', 'add-a-profile-picture'];
   const step = steps.indexOf(id) + 1;
-  const content = body
+  const wrapTables = (content) => content
     .replaceAll('<table>', '<div class="table-wrap" role="region" aria-label="Scrollable table" tabindex="0"><table>')
     .replaceAll('</table>', '</table></div>');
+  const plain = plainSections.get(title);
+  const variants = [
+    ['full', body], ['recommended', recommendedBody(title, body)],
+    ['plain', plain], ['recommended-plain', recommendedBody(title, plain)],
+  ];
+  const expectedStructure = structureSignature(body);
+  for (const [mode, content] of variants) {
+    if (structureSignature(content) !== expectedStructure) {
+      throw new Error(`The ${mode} version of “${title}” changes the guide structure.`);
+    }
+  }
+  const renderedVariants = variants.map(([mode, content]) =>
+    `<div class="guide-copy" data-guide-variant="${mode}"${mode === 'full' ? '' : ' hidden'}>${wrapTables(content)}</div>`).join('');
   return `<section class="chapter" id="${id}" aria-labelledby="${id}-title">
     <header class="chapter-head">${step ? `<span class="step" aria-label="Step ${step}">${String(step).padStart(2, '0')}</span>` : ''}
       <h2 id="${id}-title">${md.utils.escapeHtml(title)}</h2></header>
-    ${content}${id === 'how-it-works' ? checklist : ''}</section>`;
+    ${renderedVariants}${id === 'how-it-works' ? checklist : ''}</section>`;
 }).join('');
 
 const html = `<!doctype html>
@@ -115,7 +168,23 @@ const html = `<!doctype html>
       <nav class="desktop-contents" aria-label="Guide contents"><p>On this page</p><ol>${nav}</ol></nav>
       <details class="mobile-contents"><summary>On this page</summary><nav aria-label="Guide contents"><ol>${nav}</ol></nav></details>
     </aside>
-    <article aria-label="Custom email setup guide">${sections}</article>
+    <article aria-label="Custom email setup guide">
+      <div class="guide-controls" role="group" aria-label="Guide options" hidden>
+        <button type="button" data-guide-toggle="recommended" aria-pressed="false" aria-describedby="recommended-tip">
+          <span>Recommended setup only</span>
+          <span class="provider-route" aria-label="Cloudflare, Gmail, and SMTP2GO">
+            <span><img src="assets/cloudflare.png" alt="" height="14"> Cloudflare</span><span aria-hidden="true">+</span>
+            <span><img src="assets/gmail.png" alt="" height="14"> Gmail</span><span aria-hidden="true">+</span>
+            <span><img src="assets/smtp2go.png" alt="" height="14"> SMTP2GO</span>
+          </span>
+          <span class="guide-control-tip" id="recommended-tip" role="tooltip">Highlights the Cloudflare + Gmail + SMTP2GO route in the guide. Comparison tables, providers, and icons stay visible.</span>
+        </button>
+        <button type="button" data-guide-toggle="plain" aria-pressed="false" aria-describedby="plain-tip">
+          <span>Simple language</span>
+          <span class="guide-control-tip" id="plain-tip" role="tooltip">Shortens the explanations while keeping the same tables, icons, steps, and page layout.</span>
+        </button>
+      </div>
+      ${sections}</article>
   </div>
 </main>
 <footer class="shell footer">

@@ -2,6 +2,7 @@ import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { LiquidMetal, liquidMetalPresets } from '@paper-design/shaders-react';
 import './checklist.js';
+import './guide-options.js';
 
 const root = document.documentElement;
 const systemDark = matchMedia('(prefers-color-scheme: dark)');

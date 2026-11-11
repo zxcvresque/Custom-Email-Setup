@@ -315,3 +315,82 @@ html.theme-transition::view-transition-new(root) {
 @media (max-width: 767px) {
   .top-links { display: none; }
 }
+.guide-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+.guide-controls button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px 10px;
+  min-height: 44px;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 620;
+  cursor: pointer;
+  transition: background-color 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease);
+}
+.guide-controls button:hover { background: var(--panel); }
+.guide-controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.guide-controls button[aria-pressed="true"] { background: var(--action); color: var(--action-text); border-color: var(--action); }
+.guide-controls button.electric { box-shadow: 0 0 0 1px #fff, 0 0 16px rgb(255 255 255 / .2); }
+.guide-controls button > span:not(.guide-control-tip) { position: relative; z-index: 1; }
+.provider-route { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 560; white-space: nowrap; }
+.provider-route > span { display: inline-flex; align-items: center; gap: 4px; }
+.provider-route img { width: 14px; height: 14px; object-fit: contain; }
+.guide-controls button .guide-control-tip {
+  position: absolute;
+  z-index: 12;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 40px));
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 10px 30px rgb(0 0 0 / .17);
+  font-size: .78rem;
+  font-weight: 450;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -4px);
+  pointer-events: none;
+  transition: opacity 150ms var(--ease), transform 150ms var(--ease), visibility 150ms;
+}
+.guide-controls button:is(:hover, :focus-visible) .guide-control-tip { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.guide-controls button::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -2px;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--electric-angle, 0deg), transparent 0deg 250deg, #fff 292deg, transparent 326deg 360deg);
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+@property --electric-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes guide-electric-border { to { --electric-angle: 360deg; } }
+.guide-controls button.electric::before { opacity: .95; animation: guide-electric-border 850ms linear both; }
+.guide-controls.first-visit button::before { opacity: .86; animation: guide-electric-border 1.2s linear 2; }
+.guide-controls.first-visit button:nth-child(2)::before { animation-delay: .16s; }
+@media (prefers-reduced-motion: reduce) {
+  .guide-controls button::before { animation: none !important; }
+  .guide-controls button.electric::before,
+  .guide-controls.first-visit button::before { opacity: .88; background: none; border: 1px solid #fff; padding: 0; }
+}
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
