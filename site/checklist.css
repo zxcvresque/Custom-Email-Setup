@@ -44,6 +44,18 @@
   border-top: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
 }
 
+.checklist-panel .checklist-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  column-gap: 4px;
+  cursor: default;
+}
+.checklist-check { display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; }
+.checklist-jump { display: grid; place-items: center; min-height: 36px; border-radius: 6px; color: var(--muted); }
+.checklist-jump:is(:hover, :focus-visible) { background: var(--panel); color: var(--ink); }
+.checklist-hint { display: none; grid-column: 1 / -1; padding: 0 4px 10px 34px; color: var(--muted); line-height: 1.4; }
+.checklist-item[data-suggested] .checklist-hint { display: block; }
+
 .checklist-item[data-suggested] .check-label { font-weight: 620; }
 .checklist-item[data-suggested] .check-box {
   border-color: var(--accent);

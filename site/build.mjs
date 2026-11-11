@@ -4,14 +4,16 @@ import MarkdownIt from 'markdown-it';
 import octicons from '@primer/octicons';
 
 const md = new MarkdownIt({ html: true, linkify: true });
-const readme = await readFile('README.md', 'utf8');
+const guide = await readFile('site/guide.md', 'utf8');
 const repository = 'https://github.com/zxcvresque/Custom-Email-Setup';
-const tokens = md.parse(readme, {});
+const publicUrl = 'https://zxcvresque.github.io/Custom-Email-Setup/';
+const pageTitle = 'Free Custom Email Setup for Your Domain | Zxcvresque';
+const description = 'Learn how to set up a custom domain email address with free forwarding, a free SMTP relay, and the inbox you already use.';
+const tokens = md.parse(guide, {});
 const chapters = [];
 for (let i = 0; i < tokens.length; i++) {
   if (tokens[i].type !== 'heading_open' || tokens[i].tag !== 'h2') continue;
   const title = tokens[i + 1].content;
-  if (title === 'Preview the website locally') break;
   const end = tokens.findIndex((token, index) =>
     index > i && token.type === 'heading_open' && token.tag === 'h2');
   chapters.push({
@@ -29,15 +31,19 @@ const checklist = `<details class="checklist-panel" open>
   <summary class="checklist-summary">${svg('checklist')}<span>Setup checklist</span><span class="checklist-count" hidden></span></summary>
   <fieldset class="setup-checklist" aria-label="Setup tasks">
   ${[
-    ['domain', 'connect-your-domain', 'I own a domain and can change its DNS'],
-    ['inbox', 'route-incoming-mail', 'I can access my destination inbox'],
-    ['relay', 'set-up-the-smtp-relay', 'I have an account with an SMTP relay'],
-    ['send', 'send-from-your-inbox', 'I can send from my custom address'],
-    ['test', 'test-both-directions', 'I tested sending and receiving'],
-  ].map(([key, section, label]) => `<label class="checklist-item" data-check-section="${section}">
-    <input type="checkbox" data-check="${key}">
-    <span class="check-box" aria-hidden="true">${svg('check')}</span><span class="check-label">${label}</span>
-  </label>`).join('')}
+    ['domain', 'connect-your-domain', 'I own a domain and can change its DNS', 'Have your registrar login ready.'],
+    ['inbox', 'route-incoming-mail', 'I can access my destination inbox', 'Open the inbox that will receive forwarded mail.'],
+    ['relay', 'set-up-the-smtp-relay', 'I have an account with an SMTP relay', 'Sign in to the relay dashboard.'],
+    ['send', 'send-from-your-inbox', 'I can send from my custom address', 'Check that your custom address appears in the From menu.'],
+    ['test', 'test-both-directions', 'I tested sending and receiving', 'Send a test message in each direction.'],
+  ].map(([key, section, label, hint]) => `<div class="checklist-item" data-check-section="${section}">
+    <label class="checklist-check">
+      <input type="checkbox" data-check="${key}">
+      <span class="check-box" aria-hidden="true">${svg('check')}</span><span class="check-label">${label}</span>
+    </label>
+    <a class="checklist-jump" href="#${section}" aria-label="Go to ${chapters.find((chapter) => chapter.id === section).title}">${svg('arrow-right')}</a>
+    <span class="checklist-hint">${hint}</span>
+  </div>`).join('')}
   </fieldset>
 </details>`;
 const nav = chapters.map(({ title, id }) => `<li><a href="#${id}">${md.utils.escapeHtml(title)}</a></li>`).join('');
@@ -58,9 +64,14 @@ const html = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Set up email at your own domain with free forwarding, an SMTP relay, and the inbox you already use.">
+  <meta name="description" content="${description}">
+  <link rel="canonical" href="${publicUrl}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${pageTitle}">
+  <meta property="og:description" content="${description}">
+  <meta property="og:url" content="${publicUrl}">
   <meta name="color-scheme" content="light dark">
-  <title>Custom Email Setup | Zxcvresque</title>
+  <title>${pageTitle}</title>
   <script>try { const theme = localStorage.getItem('email-guide-theme'); if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch {}</script>
   <link rel="stylesheet" href="./guide.css">
   <link rel="stylesheet" href="./checklist.css">
