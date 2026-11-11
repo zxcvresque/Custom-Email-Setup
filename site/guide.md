@@ -1,3 +1,11 @@
+## What’s the benefit?
+
+Give people an email address on your own domain, such as `hello@yourdomain.com`. They can write to that address and see it in the From field when you reply. You can also create addresses like `support@yourdomain.com` and send them to the same inbox.
+
+Incoming mail is forwarded to the inbox you already check. For outgoing mail, you choose your custom address when composing a message and send it through an SMTP relay. If you change relays later, you can keep the same public address.
+
+If you already own the domain and stay within the free plans’ sending limits, you can do this without a separate email hosting subscription. Domain registration and renewal are still separate costs.
+
 ## How it works
 
 | Service | What it does |
